@@ -1,0 +1,62 @@
+/* 전역 스타일 — 디자인 시스템(크림 배경/잉크 텍스트) 기반 */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(5deg);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #dcd6c7;
+  border-radius: 999px;
+  border: 2px solid #fbf9f2;
+}
+
+/* 인라인 편집 텍스트(제목/하단 멘트) */
+.ce-edit {
+  outline: none;
+  border-radius: 8px;
+  cursor: text;
+  transition: background 0.15s;
+}
+.ce-edit:hover {
+  background: #f1ecdf;
+}
+.ce-edit:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px #ffd23e;
+}
+
+/* A4 가로 인쇄 — 화면 UI는 숨기고 인쇄 레이아웃만 표시 */
+@page {
+  size: 297mm 210mm;
+  margin: 0;
+}
+@media print {
+  [data-noprint] {
+    display: none !important;
+  }
+  .pg-app {
+    display: none !important;
+  }
+  .pg-print {
+    display: flex !important;
+  }
+  body {
+    background: #fff;
+  }
+}
