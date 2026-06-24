@@ -8,6 +8,7 @@ import { SeatGrid } from './SeatGrid'
 import { RosterList } from './RosterList'
 import { EditableText, type EditableHandle } from './EditableText'
 import { PrintArea } from './PrintArea'
+import { TeacherDesk } from './TeacherDesk'
 
 export function ResultPage({ api, viewport }: { api: SeatingApi; viewport: Viewport }) {
   const titleRef = useRef<EditableHandle>(null)
@@ -93,9 +94,7 @@ export function ResultPage({ api, viewport }: { api: SeatingApi; viewport: Viewp
                   onDragStart={api.setDragFrom}
                   onDrop={api.dropSeat}
                 />
-                <div style={{ width: 230, height: 36, background: COLORS.ink, color: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, letterSpacing: 4, marginTop: 6 }}>
-                  교 탁
-                </div>
+                <TeacherDesk width={230} height={36} fontSize={13} marginTop={6} />
               </div>
               <EditableText
                 ref={msgRef}

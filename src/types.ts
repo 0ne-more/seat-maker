@@ -2,6 +2,8 @@
 
 /** 학생: 이름과 인접 금지(기피) 번호 목록(1-based) */
 export interface Student {
+  /** 안정 식별자 — 직렬화/향후 기능(CSV import 등)용. avoid 참조는 여전히 1-based 번호 사용 */
+  readonly id: string
   readonly name: string
   readonly avoid: readonly number[]
 }
