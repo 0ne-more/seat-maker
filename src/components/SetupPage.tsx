@@ -6,6 +6,7 @@ import { COLORS } from '../constants'
 import { computeGridLayout } from '../logic/layout'
 import { SeatGrid } from './SeatGrid'
 import { StudentTable } from './StudentTable'
+import { ImportPdfButton } from './ImportPdfButton'
 import { Stepper } from './Stepper'
 import { Toggle } from './Toggle'
 import { TeacherDesk } from './TeacherDesk'
@@ -137,6 +138,7 @@ export function SetupPage({ api, viewport }: { api: SeatingApi; viewport: Viewpo
                 인원 {api.count}
               </div>
             </div>
+            <ImportPdfButton api={api} />
             <StudentTable api={api} />
           </div>
         </div>

@@ -1,6 +1,7 @@
 // 자리 배치 도구의 상태를 조율하는 최상위 훅 — 하위 도메인 훅들을 조립해 단일 SeatingApi로 노출한다.
 import { useState } from 'react'
 import type { Page, SeatKey, Student } from '../types'
+import type { ParsedStudent } from '../logic/parseRoster'
 import { activeSeats } from '../logic/seats'
 import { describeViolations, generateArrangement } from '../logic/generate'
 import { loadState } from '../persistence/storage'
@@ -27,6 +28,7 @@ export interface SeatingApi {
   setupWarn: string
   resultWarn: string
   toastMsg: string
+  toast: (msg: string) => void
   // 파생값
   activeCount: number
   count: number
@@ -53,6 +55,7 @@ export interface SeatingApi {
   addAvoid: (i: number, raw: string) => void
   removeAvoid: (i: number, num: number) => void
   setInputVal: (i: number, val: string) => void
+  importStudents: (parsed: readonly ParsedStudent[]) => void
   // 편집
   setTitle: (t: string) => void
   setMsg: (m: string) => void
@@ -121,6 +124,16 @@ export function useSeating(): SeatingApi {
     setResultWarn(warn)
   }
 
+  // PDF 등에서 추출한 명단으로 교체. 학생 인덱스가 바뀌므로 기존 배치는 폐기하고 설정 화면으로 돌아간다.
+  function importStudents(parsed: readonly ParsedStudent[]) {
+    if (parsed.length === 0) return
+    roster.replaceStudents(parsed)
+    arr.reset()
+    setPage('setup')
+    setSetupWarn('')
+    setResultWarn('')
+  }
+
   return {
     page,
     pair: grid.pair,
@@ -137,6 +150,7 @@ export function useSeating(): SeatingApi {
     setupWarn,
     resultWarn,
     toastMsg,
+    toast,
     activeCount,
     count,
     fits,
@@ -159,6 +173,7 @@ export function useSeating(): SeatingApi {
     addAvoid: roster.addAvoid,
     removeAvoid: roster.removeAvoid,
     setInputVal: roster.setInputVal,
+    importStudents,
     setTitle: meta.setTitle,
     setMsg: meta.setMsg,
   }
