@@ -8,6 +8,7 @@ import { SeatGrid } from './SeatGrid'
 import { StudentTable } from './StudentTable'
 import { Stepper } from './Stepper'
 import { Toggle } from './Toggle'
+import { TeacherDesk } from './TeacherDesk'
 
 export function SetupPage({ api, viewport }: { api: SeatingApi; viewport: Viewport }) {
   const gridBoxRef = useRef<HTMLDivElement>(null)
@@ -87,23 +88,7 @@ export function SetupPage({ api, viewport }: { api: SeatingApi; viewport: Viewpo
                 students={api.students}
                 onToggleSeat={api.toggleSeat}
               />
-              <div
-                style={{
-                  width: 210,
-                  height: 34,
-                  background: COLORS.ink,
-                  color: '#fff',
-                  borderRadius: 12,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 13,
-                  letterSpacing: 4,
-                  marginTop: 4,
-                }}
-              >
-                교 탁
-              </div>
+              <TeacherDesk width={210} height={34} fontSize={13} marginTop={4} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 16, fontSize: 12.5, color: COLORS.mute }}>
               <span>

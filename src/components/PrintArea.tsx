@@ -4,6 +4,7 @@ import { COLORS, SEAT_DIM } from '../constants'
 import { computeGridLayout } from '../logic/layout'
 import { SeatGrid } from './SeatGrid'
 import { RosterList } from './RosterList'
+import { TeacherDesk } from './TeacherDesk'
 
 interface PrintAreaProps {
   api: SeatingApi
@@ -42,23 +43,7 @@ export function PrintArea({ api, titleText, msgText }: PrintAreaProps) {
         fixed={api.fixed}
         students={api.students}
       />
-      <div
-        style={{
-          width: 240,
-          height: 38,
-          background: COLORS.ink,
-          color: '#fff',
-          borderRadius: 12,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 14,
-          letterSpacing: 4,
-          marginTop: 18,
-        }}
-      >
-        교 탁
-      </div>
+      <TeacherDesk width={240} height={38} fontSize={14} marginTop={18} />
       <div style={{ marginTop: 30, fontSize: 16, fontWeight: 500, color: '#3a342b', textAlign: 'center', maxWidth: chartW + 40 }}>
         {msgText}
       </div>
