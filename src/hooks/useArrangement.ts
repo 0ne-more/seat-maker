@@ -8,6 +8,8 @@ export interface ArrangementApi {
   readonly fixed: ReadonlySet<SeatKey>
   /** 배치 생성 결과를 반영할 때 사용 (useSeating의 runGenerate에서 호출) */
   readonly setArrangement: Dispatch<SetStateAction<Record<SeatKey, number | null>>>
+  /** 배치·고정석을 모두 비운다 (명단 교체 등으로 학생 인덱스가 무효해질 때) */
+  readonly reset: () => void
   readonly toggleFixed: (k: SeatKey) => void
   readonly setDragFrom: (k: SeatKey | null) => void
   readonly dropSeat: (to: SeatKey) => void
@@ -55,10 +57,17 @@ export function useArrangement(restored: SeatingSnapshot | null): ArrangementApi
     dragFrom.current = null
   }
 
+  function reset() {
+    setArrangement({})
+    setFixed(new Set())
+    dragFrom.current = null
+  }
+
   return {
     arrangement,
     fixed,
     setArrangement,
+    reset,
     toggleFixed,
     setDragFrom: (k) => {
       dragFrom.current = k
