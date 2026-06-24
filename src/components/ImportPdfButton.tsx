@@ -48,15 +48,18 @@ export function ImportPdfButton({ api }: { api: SeatingApi }) {
           if (!loading) inputRef.current?.click()
         }}
         style={{
-          textAlign: 'center',
-          padding: '10px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 7,
+          padding: '12px 22px',
           marginBottom: 12,
-          fontSize: 13.5,
+          fontSize: 14.5,
           fontWeight: 700,
-          color: loading ? COLORS.mute : COLORS.subText,
+          color: loading ? COLORS.mute : COLORS.ink,
           cursor: loading ? 'default' : 'pointer',
-          border: `1.5px dashed ${COLORS.borderStrong}`,
-          borderRadius: 12,
+          border: `1.5px solid ${COLORS.borderStrong}`,
+          borderRadius: 999,
           background: '#fff',
           userSelect: 'none',
         }}
