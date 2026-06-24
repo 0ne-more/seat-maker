@@ -4,11 +4,7 @@ import type { Page, SeatKey, Student } from '../types'
 import { GRID_MAX, GRID_MIN, MAX_AVOID } from '../constants'
 import { activeSeats } from '../logic/seats'
 import { describeViolations, generateArrangement } from '../logic/generate'
-
-/** 초기 학생 명단 — 빈 행 25개로 시작 (이름/기피 번호 없음) */
-function createInitialStudents(): Student[] {
-  return Array.from({ length: 25 }, () => ({ name: '', avoid: [] }))
-}
+import { createInitialStudents, createStudent } from '../domain/student'
 
 export interface SeatingApi {
   page: Page
@@ -167,13 +163,13 @@ export function useSeating(): SeatingApi {
       toast(`${num}번은 인접 금지가 이미 ${MAX_AVOID}명이라 등록할 수 없어요`)
       return
     }
-    const next = students.map((s) => ({ name: s.name, avoid: [...s.avoid] }))
+    const next = students.map((s) => ({ ...s, avoid: [...s.avoid] }))
     next[i].avoid.push(num)
     if (!next[num - 1].avoid.includes(i + 1)) next[num - 1].avoid.push(i + 1)
     setStudents(next)
   }
   function removeAvoid(i: number, num: number) {
-    const next = students.map((s) => ({ name: s.name, avoid: [...s.avoid] }))
+    const next = students.map((s) => ({ ...s, avoid: [...s.avoid] }))
     next[i].avoid = next[i].avoid.filter((x) => x !== num)
     next[num - 1].avoid = next[num - 1].avoid.filter((x) => x !== i + 1)
     setStudents(next)
@@ -185,13 +181,13 @@ export function useSeating(): SeatingApi {
     setStudents(next)
   }
   function addStudent() {
-    setStudents([...students, { name: '새 학생', avoid: [] }])
+    setStudents([...students, createStudent('새 학생')])
   }
   function removeLastStudent() {
     const n = students.length
     if (n <= 1) return
     // 마지막 번호(n) 제거 + 다른 학생 기피 목록에서도 정리
-    const next = students.slice(0, n - 1).map((s) => ({ name: s.name, avoid: s.avoid.filter((x) => x !== n) }))
+    const next = students.slice(0, n - 1).map((s) => ({ ...s, avoid: s.avoid.filter((x) => x !== n) }))
     const nextInputs = { ...inputVals }
     delete nextInputs[n - 1]
     setStudents(next)

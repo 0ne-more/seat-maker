@@ -4,7 +4,7 @@ import { avoidPairs, violations } from './avoid'
 
 // 테스트용 학생 생성 헬퍼 — 도메인 모델 변경 시 이 한 곳만 수정하면 된다.
 function mk(name: string, avoid: number[] = []): Student {
-  return { name, avoid }
+  return { id: `id-${name}`, name, avoid }
 }
 
 describe('avoidPairs', () => {

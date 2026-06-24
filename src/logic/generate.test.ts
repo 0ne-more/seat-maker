@@ -4,7 +4,7 @@ import { activeSeats } from './seats'
 import { describeViolations, generateArrangement } from './generate'
 
 function mk(name: string, avoid: number[] = []): Student {
-  return { name, avoid }
+  return { id: `id-${name}`, name, avoid }
 }
 
 // 배치 결과에서 학생 인덱스 → 좌석 맵 (null 제외)
