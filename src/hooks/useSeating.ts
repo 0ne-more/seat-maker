@@ -5,6 +5,11 @@ import { GRID_MAX, GRID_MIN, MAX_AVOID } from '../constants'
 import { activeSeats } from '../logic/seats'
 import { describeViolations, generateArrangement } from '../logic/generate'
 import { createInitialStudents, createStudent } from '../domain/student'
+import { loadState } from '../persistence/storage'
+import { usePersistence } from './usePersistence'
+
+const DEFAULT_TITLE = '1반 자리 편성표'
+const DEFAULT_MSG = '오늘부터 새 자리예요. 2주 동안 잘 지내봐요! 😊'
 
 export interface SeatingApi {
   page: Page
@@ -54,18 +59,24 @@ export interface SeatingApi {
 }
 
 export function useSeating(): SeatingApi {
-  const [page, setPage] = useState<Page>('setup')
-  const [pair, setPair] = useState(false)
-  const [cols, setCols] = useState(6)
-  const [rows, setRows] = useState(5)
-  const [inactive, setInactive] = useState<ReadonlySet<SeatKey>>(new Set())
-  const [students, setStudents] = useState<Student[]>(createInitialStudents)
+  // 마운트 시 저장된 상태를 1회만 복원 (없으면 null → 기본값)
+  const [restored] = useState(loadState)
+  const [page, setPage] = useState<Page>(restored?.page ?? 'setup')
+  const [pair, setPair] = useState(restored?.pair ?? false)
+  const [cols, setCols] = useState(restored?.cols ?? 6)
+  const [rows, setRows] = useState(restored?.rows ?? 5)
+  const [inactive, setInactive] = useState<ReadonlySet<SeatKey>>(restored?.inactive ?? new Set())
+  const [students, setStudents] = useState<Student[]>(() =>
+    restored ? [...restored.students] : createInitialStudents(),
+  )
   const [inputVals, setInputVals] = useState<Record<number, string>>({})
-  const [arrangement, setArrangement] = useState<Record<SeatKey, number | null>>({})
-  const [fixed, setFixed] = useState<ReadonlySet<SeatKey>>(new Set())
-  const [showRoster, setShowRoster] = useState(false)
-  const [titleText, setTitleText] = useState('1반 자리 편성표')
-  const [msgText, setMsgText] = useState('오늘부터 새 자리예요. 2주 동안 잘 지내봐요! 😊')
+  const [arrangement, setArrangement] = useState<Record<SeatKey, number | null>>(
+    () => (restored ? { ...restored.arrangement } : {}),
+  )
+  const [fixed, setFixed] = useState<ReadonlySet<SeatKey>>(restored?.fixed ?? new Set())
+  const [showRoster, setShowRoster] = useState(restored?.showRoster ?? false)
+  const [titleText, setTitleText] = useState(restored?.titleText ?? DEFAULT_TITLE)
+  const [msgText, setMsgText] = useState(restored?.msgText ?? DEFAULT_MSG)
   const [setupWarn, setSetupWarn] = useState('')
   const [resultWarn, setResultWarn] = useState('')
   const [toastMsg, setToastMsg] = useState('')
@@ -75,6 +86,9 @@ export function useSeating(): SeatingApi {
   const count = students.length
   const activeCount = activeSeats(rows, cols, inactive).length
   const fits = count <= activeCount
+
+  // 휘발성 상태(inputVals/경고/토스트)를 제외한 작업 상태를 자동 저장한다.
+  usePersistence({ page, pair, cols, rows, inactive, fixed, students, arrangement, showRoster, titleText, msgText })
 
   function toast(msg: string) {
     if (toastTimer.current) clearTimeout(toastTimer.current)
